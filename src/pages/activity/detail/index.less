@@ -1,0 +1,61 @@
+:global {
+    .activity-detail {
+        padding: 16px;
+        background: rgba(242, 241, 242, 1);
+        height: 100%;
+
+        .title {
+            height: 168px;
+            background: rgba(255, 255, 255, 1);
+            padding: 14px;
+
+            .name {
+                color: #999;
+            }
+
+            .content {
+                font-size: 18px;
+                color: #424242;
+                margin-top: 10px;
+            }
+
+            .MutualAid {
+                color: #fff;
+                background-color: #D96665;
+                display: inline-block;
+                padding: 5px 20px;
+                border-radius: 4px;
+                margin-top: 20px;
+                cursor: pointer;
+            }
+
+        }
+
+        .refresh {
+            position: fixed;
+            right: 20px;
+            bottom: 50px;
+            font-size: 26px;
+            color: #333;
+            cursor: pointer;
+        }
+
+        .list {
+            margin-top: 20px;
+            background-color: #fff;
+            padding: 14px;
+
+            .ant-timeline-item-content {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-around;
+
+                :nth-child(1) {
+                    color: #333;
+                    margin-right: 5px;
+                }
+
+            }
+        }
+    }
+}
