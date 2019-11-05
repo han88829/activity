@@ -1,10 +1,13 @@
-import { query } from "@/services/detail";
+import { query, } from "@/services/detail";
 import { message } from "antd";
+import { getCookie } from "@/utils/method";
+
 const GlobalModel = {
     namespace: "detail",
     state: {
         data: {},
-        list: []
+        list: [],
+        action: {}
     },
     effects: {
         *fetch({ payload }, { call, put, select }) {
@@ -19,9 +22,8 @@ const GlobalModel = {
         },
         *help({ payload }, { call, put, select }) {
 
-            
+        },
 
-        }
     },
     reducers: {
         updateData(state, { payload }) {

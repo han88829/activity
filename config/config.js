@@ -177,7 +177,7 @@ export default {
   chainWebpack: webpackPlugin,
   proxy: {
     "/api/": {
-      target: "http://password.h88829.top/",
+      target: "http://127.0.0.1:3002/",
       changeOrigin: true
     }
   }

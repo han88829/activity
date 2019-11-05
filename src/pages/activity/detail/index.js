@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from "dva";
-import { Row, Col, Icon, Timeline, Spin } from "antd";
-import Modal from "./Modal";
+import { Row, Col, Icon, Timeline, Spin, message, Modal } from "antd";
+import ModalDetail from "./Modal";
+import { getCookie } from "@/utils/method";
+import AddNameModal from "./AddNameModal";
+import moment from "moment";
+import copy from "copy-to-clipboard";
 import "./index.less";
 
 @connect(({ detail, loading }) => ({
@@ -9,6 +13,11 @@ import "./index.less";
     loading: loading.effects["detail/fetch"]
 }))
 class index extends Component {
+
+    state = {
+        img: "",
+        visible: false
+    }
 
     componentDidMount() {
         const id = this.props.match.params.id;
@@ -44,10 +53,29 @@ class index extends Component {
                             </Col>
                             <Col span={12}>
                                 <span
+                                    className="copy"
+                                    onClick={() => {
+                                        if (!data.url) return message.error('链接错误！');
+                                        if (copy(data.url)) {
+                                            message.success('复制成功！')
+                                        }
+                                    }}
+                                >复制链接</span>
+                                <span
                                     className="MutualAid"
                                     onClick={() => {
+                                        const user = JSON.parse(getCookie('user') || "{}");
+
+                                        if (!user || !user.name) {
+                                            message.error('未登录，请输入名称！');
+                                            this.props.dispatch({
+                                                type: "modal/updateData",
+                                                payload: { nameVisible: true }
+                                            });
+                                            return
+                                        }
                                         this.props.dispatch({
-                                            type: "detail/help", payload: { id }
+                                            type: "modal/updateData", payload: { visible: true, data: { pid: id } }
                                         });
                                     }}
                                 >互助</span>
@@ -58,10 +86,19 @@ class index extends Component {
                     <div className="list">
                         <Timeline>
                             {list.map((item, index) => {
-                                return <Timeline.Item color="red">
+                                return <Timeline.Item
+                                    key={item._id}
+                                    color={index == 0 ? 'red' : '#1890ff'}>
                                     <span>{item.grade || "0"}级</span>
                                     <span>{item.name || ""}</span>
-                                    <span>{item.add_time}</span>
+                                    <span>{moment(item.add_time).format('HH:mm:ss')}</span>
+                                    <span>
+                                        <img
+                                            onClick={() => {
+                                                this.setState({ visible: true, img: item.url });
+                                            }}
+                                            src={item.url} alt="" />
+                                    </span>
                                 </Timeline.Item>
                             })}
                         </Timeline>
@@ -77,7 +114,15 @@ class index extends Component {
                         }}
                     />
                 </div >
-                <Modal />
+                <ModalDetail />
+                <AddNameModal />
+                <Modal
+                    visible={this.state.visible}
+                    onCancel={() => this.setState({ visible: false, img: "" })}
+                    footer={null}
+                >
+                    <img src={this.state.img} alt="" className="detail-modal-img" />
+                </Modal>
             </Spin >
         );
     }
